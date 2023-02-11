@@ -1,0 +1,24 @@
+{
+  "name": "extent-canvas",
+  "version": "1.0.0",
+  "description": "A HTML canvas which can be panned and zoomed and has touch support",
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "types": "./dist/index.d.ts",
+  "engines": {
+    "node": ">=14.17"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "wishcresp",
+  "licence": "MIT",
+  "devDependencies": {
+    "typescript": "^4.9.5"
+  }
+}
