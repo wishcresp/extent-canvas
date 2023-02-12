@@ -1,4 +1,19 @@
-import {RefObject} from "react";
+import {CanvasHTMLAttributes, DetailedHTMLProps, RefObject} from "react";
+
+/**
+ * Extent canvas component props.
+ */
+export interface ExtentCanvasProps extends Omit<ExtentCanvasArgs, "ref">, Omit<DetailedHTMLProps<CanvasHTMLAttributes<HTMLCanvasElement>, HTMLCanvasElement>, "ref"> {
+  /**
+   * The current canvas view. If this is being used, don't use {@link viewBox}.
+   */
+  view?: ExtentCanvasView;
+
+  /**
+   * The current canvas view box. If this is being used, don't use {@link view}.
+   */
+  viewBox?: ExtentCanvasViewBox;
+}
 
 /**
  * The extent-canvas hook.

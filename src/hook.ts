@@ -54,7 +54,7 @@ export const useExtentCanvas: UseExtentCanvas = ({
     );
 
     onDraw?.(context);
-  }, [context, onDraw]);
+  }, [context, onBeforeDraw, onDraw]);
 
   /**
    * Callback to set the canvas view.
@@ -66,8 +66,9 @@ export const useExtentCanvas: UseExtentCanvas = ({
 
     viewRef.current = view;
     onViewChange?.(viewRef.current, "set");
+    onViewBoxChange?.(calculateViewBox(context.canvas, viewRef.current), "set");
     draw();
-  }, [context, onViewChange, draw]);
+  }, [context, onViewChange, onViewBoxChange, draw]);
 
   /**
    * Callback to set the canvas view box.
@@ -79,8 +80,9 @@ export const useExtentCanvas: UseExtentCanvas = ({
 
     viewRef.current = calculateCanvasView(context.canvas, viewBox)
     onViewChange?.(viewRef.current, "set");
+    onViewBoxChange?.(calculateViewBox(context.canvas, viewRef.current), "set");
     draw();
-  }, [context, onViewChange, draw]);
+  }, [context, onViewChange, onViewBoxChange, draw]);
 
   /**
    * Attach draw context listeners.
@@ -230,12 +232,21 @@ export const useExtentCanvas: UseExtentCanvas = ({
       context.canvas.removeEventListener("touchmove", handleTouchMove);
       context.canvas.removeEventListener("touchend", handleTouchStart);
     }
-  }, [context, onViewChange, draw]);
+  }, [context, onViewChange, onViewBoxChange, draw]);
 
   /**
    * Get the canvas 2d context.
    */
   useEffect(() => {
+    if (ref === null || typeof ref === "string") {
+      return;
+    }
+
+    if (typeof ref === "function") {
+      ref(null);
+      return;
+    }
+
     if (ref.current === null) {
       return;
     }
@@ -253,7 +264,7 @@ export const useExtentCanvas: UseExtentCanvas = ({
 
     onContextInit?.(context);
     draw();
-  }, [context, draw])
+  }, [context, onContextInit, draw])
 
   return {setView, setViewBox, draw};
 }
