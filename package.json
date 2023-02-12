@@ -6,7 +6,6 @@
   "exports": {
     "./*": "./dist/*"
   },
-  "types": "./dist/index.d.ts",
   "engines": {
     "node": ">=14.17"
   },
