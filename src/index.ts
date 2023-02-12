@@ -16,5 +16,3 @@ export type {
   ExtentCanvasViewChangeReason,
   UseExtentCanvas
 } from "./types";
-
-
