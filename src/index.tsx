@@ -15,9 +15,6 @@ export type {
   UseExtentCanvas
 } from "./types";
 
-/**
- * Give a canvas an extent that can be panned and zoomed.
- */
 export const useExtentCanvas: UseExtentCanvas = ({
   ref,
   options,
@@ -38,9 +35,6 @@ export const useExtentCanvas: UseExtentCanvas = ({
   const prevPosRef = useRef<ExtentCanvasPoint>(initialPosition);
   const viewRef = useRef<ExtentCanvasView>({offset: initialPosition, scale: initialScale});
 
-  /**
-   * Callback to draw the canvas.
-   */
   const draw: ExtentCanvasFunctions["draw"] = useCallback(() => {
     if (context === null) {
       return;
@@ -69,9 +63,6 @@ export const useExtentCanvas: UseExtentCanvas = ({
     onDraw?.(context);
   }, [context, onBeforeDraw, onDraw]);
 
-  /**
-   * Callback to set the canvas view.
-   */
   const setView: ExtentCanvasFunctions["setView"] = useCallback((view) => {
     if (context === null) {
       return;
@@ -83,9 +74,6 @@ export const useExtentCanvas: UseExtentCanvas = ({
     draw();
   }, [context, onViewChange, onViewBoxChange, draw]);
 
-  /**
-   * Callback to set the canvas view box.
-   */
   const setViewBox: ExtentCanvasFunctions["setViewBox"] = useCallback((viewBox) => {
     if (context === null) {
       return;
@@ -97,9 +85,6 @@ export const useExtentCanvas: UseExtentCanvas = ({
     draw();
   }, [context, onViewChange, onViewBoxChange, draw]);
 
-  /**
-   * Attach draw context listeners.
-   */
   useEffect(() => {
     if (context === null) {
       return;
@@ -108,17 +93,11 @@ export const useExtentCanvas: UseExtentCanvas = ({
     let isDragging: boolean = false;
     let prevPinchDistance: number = 0;
 
-    /**
-     * Handle mouse down on the canvas.
-     */
     const handleMouseDown = ({clientX, clientY}: MouseEvent) => {
       isDragging = true;
       posRef.current = getCursorOffset(clientX, clientY, context);
     }
 
-    /**
-     * Handle panning on mouse move on the canvas.
-     */
     const handleMouseMove = ({clientX, clientY}: MouseEvent) => {
       if (!isDragging) {
         return;
@@ -135,16 +114,10 @@ export const useExtentCanvas: UseExtentCanvas = ({
       draw();
     }
 
-    /**
-     * Handle mouse up on the canvas.
-     */
     const handleMouseUp = (): void => {
       isDragging = false;
     }
 
-    /**
-     * Handle zooming with scroll wheel events.
-     */
     const handleWheel = (event: WheelEvent): void => {
       event.preventDefault();
 
@@ -170,11 +143,6 @@ export const useExtentCanvas: UseExtentCanvas = ({
       draw();
     };
 
-    /**
-     * Handle getting the starting position of a touch event.
-     * 
-     * @param touches The touch list. 
-     */
     const handleTouchStart = ({touches}: TouchEvent) => {
       const {x, y, t1, t2} = getTouchCoordinates(touches);
 
@@ -186,11 +154,6 @@ export const useExtentCanvas: UseExtentCanvas = ({
       }
     }
     
-    /**
-     * Handles touch move and Pinch-to-Zoom.
-     * 
-     * @param touches The touch list. 
-     */
     const handleTouchMove = ({touches}: TouchEvent) => {
       const {x, y, t1, t2} = getTouchCoordinates(touches);
 
@@ -247,9 +210,6 @@ export const useExtentCanvas: UseExtentCanvas = ({
     }
   }, [context, onViewChange, onViewBoxChange, draw]);
 
-  /**
-   * Get the canvas 2d context.
-   */
   useEffect(() => {
     if (ref.current === null) {
       return;
@@ -258,9 +218,6 @@ export const useExtentCanvas: UseExtentCanvas = ({
     setContext(ref.current.getContext("2d", options));
   }, [ref, options]);
 
-  /**
-   * Init the context and draw.
-   */
    useEffect(() => {
     if (context === null) {
       return;
@@ -272,7 +229,6 @@ export const useExtentCanvas: UseExtentCanvas = ({
 
   return {setView, setViewBox, draw};
 }
-
 
 export const ExtentCanvas: FC<ExtentCanvasProps> = ({
   view,
