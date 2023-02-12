@@ -238,15 +238,6 @@ export const useExtentCanvas: UseExtentCanvas = ({
    * Get the canvas 2d context.
    */
   useEffect(() => {
-    if (ref === null || typeof ref === "string") {
-      return;
-    }
-
-    if (typeof ref === "function") {
-      ref(null);
-      return;
-    }
-
     if (ref.current === null) {
       return;
     }
