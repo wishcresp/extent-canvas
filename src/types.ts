@@ -18,6 +18,11 @@ export interface ExtentCanvasArgs {
   ref: RefObject<HTMLCanvasElement>;
 
   /**
+   * The 2D context options.
+   */
+  options?: CanvasRenderingContext2DSettings
+
+  /**
    * The initial position point of the canvas view.
    * 
    * @default origin {x: 0, y: 0}
@@ -49,17 +54,24 @@ export interface ExtentCanvasArgs {
   zoomSensitivity?: number;
 
   /**
+   * Callback when the context is initialised.
+   * 
+   * @param context The canvas 2D context.
+   */
+  onContextInit?: (context: CanvasRenderingContext2D) => void;
+
+  /**
    * Callback to prepare the canvas for a new draw. Is called before each draw,
    * after canvas transform reset and before scaling and translation.
    * 
-   * @param context The canvas context.
+   * @param context The canvas 2D context.
    */
   onBeforeDraw?: (context: CanvasRenderingContext2D) => void;
 
   /**
    * Callback to draw to the canvas.
    * 
-   * @param context The canvas context
+   * @param context The canvas 2D context.
    */
   onDraw?: (context: CanvasRenderingContext2D) => void;
 
@@ -73,20 +85,13 @@ export interface ExtentCanvasArgs {
   onViewChange?: (view: ExtentCanvasView, reason: ExtentCanvasViewChangeReason) => void;
 
   /**
-   * 
+   * Callback when the canvas' view box changes.
    * Alternative to {@link onViewChange}.
    * 
    * @param view 
    * @param reason 
    */
   onViewBoxChange?: (viewBox: ExtentCanvasViewBox, reason: ExtentCanvasViewChangeReason) => void;
-
-  /**
-   * Callback when the canvas area is right clicked.
-   * 
-   * @param pos The mouse position.
-   */
-  onRightClick?: (pos: {clientX: number, clientY: number, x: number, y: number}) => void;
 }
 
 /**
@@ -185,4 +190,7 @@ export type ExtentCanvasViewChangeReason = "move" | "zoom" | "set"
 /**
  * A touch event.
  */
-export type ExtentCanvasTouch = Pick<Touch, "clientX" | "clientY">
+export interface ExtentCanvasTouch {
+  clientX: number;
+  clientY: number;
+}

@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useRef, useState} from "react";
-import {add, calculateCanvasPosition, calculateCanvasView, calculateViewBox, diff, getCursorOffset, getTouchCoordinates, getTouchDistance, scale} from "./math";
+import {add, calculateCanvasView, calculateViewBox, diff, getCursorOffset, getTouchCoordinates, getTouchDistance, scale} from "./math";
 import {ExtentCanvasFunctions, ExtentCanvasPoint, ExtentCanvasView, UseExtentCanvas} from "./types";
 
 /**
@@ -7,11 +7,12 @@ import {ExtentCanvasFunctions, ExtentCanvasPoint, ExtentCanvasView, UseExtentCan
  */
 export const useExtentCanvas: UseExtentCanvas = ({
   ref,
+  options,
+  onContextInit,
   onBeforeDraw,
   onDraw,
   onViewChange,
   onViewBoxChange,
-  onRightClick,
   initialPosition = {x: 0, y: 0},
   initialScale = 1,
   zoomSensitivity = 320,
@@ -25,7 +26,7 @@ export const useExtentCanvas: UseExtentCanvas = ({
   const viewRef = useRef<ExtentCanvasView>({offset: initialPosition, scale: initialScale});
 
   /**
-   * Redraw the canvas.
+   * Callback to draw the canvas.
    */
   const draw: ExtentCanvasFunctions["draw"] = useCallback(() => {
     if (context === null) {
@@ -56,7 +57,7 @@ export const useExtentCanvas: UseExtentCanvas = ({
   }, [context, onDraw]);
 
   /**
-   * Update the canvas view.
+   * Callback to set the canvas view.
    */
   const setView: ExtentCanvasFunctions["setView"] = useCallback((view) => {
     if (context === null) {
@@ -69,7 +70,7 @@ export const useExtentCanvas: UseExtentCanvas = ({
   }, [context, onViewChange, draw]);
 
   /**
-   * Update the canvas view.
+   * Callback to set the canvas view box.
    */
   const setViewBox: ExtentCanvasFunctions["setViewBox"] = useCallback((viewBox) => {
     if (context === null) {
@@ -80,17 +81,6 @@ export const useExtentCanvas: UseExtentCanvas = ({
     onViewChange?.(viewRef.current, "set");
     draw();
   }, [context, onViewChange, draw]);
-
-  /**
-   * Set the context.
-   */
-  useEffect(() => {
-    if (ref.current === null) {
-      return;
-    }
-
-    setContext(ref.current.getContext("2d", {alpha: true}));
-  }, [ref, draw]);
 
   /**
    * Attach draw context listeners.
@@ -147,8 +137,8 @@ export const useExtentCanvas: UseExtentCanvas = ({
       posRef.current = getCursorOffset(event.clientX, event.clientY, context);
 
       const absDelta: number = 1 - (Math.abs(event.deltaY) / zoomSensitivity);
-      const positive: boolean = event.deltaY > 0;
-      const unclamedScale: number = positive ? viewRef.current.scale * absDelta : viewRef.current.scale / absDelta;
+      const isPositive: boolean = event.deltaY > 0;
+      const unclamedScale: number = isPositive ? viewRef.current.scale * absDelta : viewRef.current.scale / absDelta;
 
       const clampedScale: number = Math.max(Math.min(unclamedScale, maxScale ?? unclamedScale), minScale ?? unclamedScale);
 
@@ -166,7 +156,7 @@ export const useExtentCanvas: UseExtentCanvas = ({
     };
 
     /**
-     * Handle a new touch event.
+     * Handle getting the starting position of a touch event.
      * 
      * @param touches The touch list. 
      */
@@ -181,6 +171,11 @@ export const useExtentCanvas: UseExtentCanvas = ({
       }
     }
     
+    /**
+     * Handles touch move and Pinch-to-Zoom.
+     * 
+     * @param touches The touch list. 
+     */
     const handleTouchMove = ({touches}: TouchEvent) => {
       const {x, y, t1, t2} = getTouchCoordinates(touches);
 
@@ -238,88 +233,27 @@ export const useExtentCanvas: UseExtentCanvas = ({
   }, [context, onViewChange, draw]);
 
   /**
-   * Attach other listeners.
+   * Get the canvas 2d context.
    */
   useEffect(() => {
-    if (context === null) {
+    if (ref.current === null) {
       return;
     }
 
-    /**
-     * Handle right click events on the canvas.
-     */
-    const handleRightClick = (event: MouseEvent): void => {
-      event.preventDefault();
-      
-      if (onRightClick) {
-        const {clientX, clientY} = event;
-        const {left, top} = context.canvas.getBoundingClientRect();
-        onRightClick({clientX, clientY, ...calculateCanvasPosition(viewRef.current, clientX - left, clientY - top)});
-      }
-    }
-
-    context.canvas.addEventListener("contextmenu", handleRightClick);
-
-    return () => {
-      context.canvas.removeEventListener("contextmenu", handleRightClick);
-    }
-  }, [context, onRightClick]);
+    setContext(ref.current.getContext("2d", options));
+  }, [ref, options]);
 
   /**
-   * Init the context.
+   * Init the context and draw.
    */
    useEffect(() => {
     if (context === null) {
       return;
     }
 
+    onContextInit?.(context);
     draw();
   }, [context, draw])
-
-  /**
-   * Redraw the canvas on resize.
-   */
-  useEffect(() => {
-    if (context === null || context.canvas.parentElement === null) {
-      return;
-    }
-
-    /**
-     * Resize the canvas, draw the current view to an offscreen canvas and copy it back after resize
-     * to reduce flicker.
-     * 
-     * @param entries The resize observer entries.
-     */
-    const handleResize = (entries: ResizeObserverEntry[]) => {
-      const tempCanvas: HTMLCanvasElement = document.createElement("canvas");
-      const tempContext: CanvasRenderingContext2D = tempCanvas.getContext("2d", {alpha: true}) as CanvasRenderingContext2D;
-      if (context.canvas.width > 0 && context.canvas.height > 0) {
-        tempContext.drawImage(context.canvas, 0, 0);
-      }
-
-      const isFullscreen: boolean = Boolean(document.fullscreenElement);
-      const entry: ResizeObserverEntry | undefined = entries[0];
-      if (isFullscreen) {
-        context.canvas.width = window.innerWidth;
-        context.canvas.height = window.innerHeight;
-      } else if(entry) {
-        context.canvas.width = entry.contentRect.width;
-        context.canvas.height = entry.contentRect.height;
-      }
-
-      if (context.canvas.width > 0 && context.canvas.height > 0) {
-        context.drawImage(tempContext.canvas, viewRef.current.offset.x, viewRef.current.offset.y);
-      }
-      draw();
-    };
-
-    const observer = new ResizeObserver(handleResize);
-    observer.observe(context.canvas);
-
-    return () => {
-      observer.disconnect();
-    }
-  }, [context, draw]);
 
   return {setView, setViewBox, draw};
 }
