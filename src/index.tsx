@@ -1,6 +1,19 @@
-import {useCallback, useEffect, useRef, useState} from "react";
+import {FC, useCallback, useEffect, useRef, useState} from "react";
 import {add, calculateCanvasView, calculateViewBox, diff, getCursorOffset, getTouchCoordinates, getTouchDistance, scale} from "./math";
-import {ExtentCanvasFunctions, ExtentCanvasPoint, ExtentCanvasView, UseExtentCanvas} from "./types";
+import {ExtentCanvasFunctions, ExtentCanvasPoint, ExtentCanvasProps, ExtentCanvasView, UseExtentCanvas} from "./types";
+
+export type {
+  ExtentCanvasArgs,
+  ExtentCanvasFunctions,
+  ExtentCanvasPoint,
+  ExtentCanvasProps,
+  ExtentCanvasSize,
+  ExtentCanvasTouch,
+  ExtentCanvasView,
+  ExtentCanvasViewBox,
+  ExtentCanvasViewChangeReason,
+  UseExtentCanvas
+} from "./types";
 
 /**
  * Give a canvas an extent that can be panned and zoomed.
@@ -259,3 +272,57 @@ export const useExtentCanvas: UseExtentCanvas = ({
 
   return {setView, setViewBox, draw};
 }
+
+
+export const ExtentCanvas: FC<ExtentCanvasProps> = ({
+  view,
+  viewBox,
+  options,
+  initialPosition,
+  initialScale,
+  maxScale,
+  minScale,
+  zoomSensitivity,
+  onContextInit,
+  onBeforeDraw,
+  onDraw,
+  onViewChange,
+  onViewBoxChange,
+  ...canvasProps
+}) => {
+  const ref = useRef<HTMLCanvasElement | null>(null);
+
+  const {setView, setViewBox} = useExtentCanvas({
+    ref,
+    options,
+    initialPosition,
+    initialScale,
+    maxScale,
+    minScale,
+    zoomSensitivity,
+    onContextInit,
+    onBeforeDraw,
+    onDraw,
+    onViewChange,
+    onViewBoxChange,
+  });
+
+  useEffect(() => {
+    if (view === undefined) {
+      return;
+    }
+    setView(view);
+  }, [setView, view]);
+
+  useEffect(() => {
+    if (viewBox === undefined) {
+      return;
+    }
+    setViewBox(viewBox);
+  }, [setViewBox, viewBox])
+
+  return (
+    <canvas ref={ref} {...canvasProps}/>
+  )
+};
+

@@ -6,12 +6,6 @@
 		"jsx": "react-jsx",
     "declaration": true,
 		"strict": true,
-		"noImplicitReturns": true,
-		"noImplicitOverride": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-		"noUncheckedIndexedAccess": true,
-		"noPropertyAccessFromIndexSignature": true
 	},
   "include": [
 		"src",
@@ -22,6 +16,5 @@
   "ts-node": {
 		"transpileOnly": true,
 		"files": true,
-		"experimentalResolver": true
 	}
 }
