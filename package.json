@@ -1,7 +1,7 @@
 {
   "name": "extent-canvas",
   "version": "1.0.0",
-  "description": "A HTML canvas which can be panned and zoomed and has touch support",
+  "description": "A HTML canvas which can be panned and zoomed (with touch support)",
   "type": "module",
   "exports": {
     ".": "./dist/index.js"
@@ -17,8 +17,20 @@
     "build": "tsc"
   },
   "author": "wishcresp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wishcresp/extent-canvas.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wishcresp/extent-canvas/issues"
+  },
   "licence": "MIT",
   "devDependencies": {
+    "@types/react": "^18.0.28",
+    "react": "^18.2.0",
     "typescript": "^4.9.5"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0"
   }
 }

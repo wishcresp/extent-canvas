@@ -1,1 +1,5 @@
-node_modules
+# Just don't
+/node_modules
+
+# Compiled
+/dist

@@ -1,36 +1,24 @@
 {
 	"compilerOptions": {
-		"module": "node16",
-		"moduleResolution": "node16",
-		"moduleDetection": "force",
-		"target": "ES2020",
-		"lib": [
-			"DOM",
-			"DOM.Iterable",
-			"ES2020"
-		],
-		"allowSyntheticDefaultImports": true,
-		"resolveJsonModule": false,
+		"target": "ES2015",
+		"module": "CommonJS",
+    "outDir": "dist",
 		"jsx": "react",
-		"declaration": true,
-		"pretty": true,
-		"stripInternal": true,
+    "declaration": true,
 		"strict": true,
 		"noImplicitReturns": true,
 		"noImplicitOverride": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
-		"noFallthroughCasesInSwitch": true,
 		"noUncheckedIndexedAccess": true,
-		"noPropertyAccessFromIndexSignature": true,
-		"noEmitOnError": true,
-		"useDefineForClassFields": true,
-		"forceConsistentCasingInFileNames": true,
-		"skipLibCheck": true,
+		"noPropertyAccessFromIndexSignature": true
 	},
   "include": [
 		"src",
 	],
+  "exclude": [
+    "node_modules"
+  ],
   "ts-node": {
 		"transpileOnly": true,
 		"files": true,
