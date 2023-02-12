@@ -1,6 +1,6 @@
 {
   "name": "extent-canvas",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A React HTML canvas with pan, zoom and touch support",
   "type": "module",
   "exports": {
@@ -14,8 +14,8 @@
   ],
   "scripts": {
     "clean": "rm -rf dist",
-    "prepublish": "npm run clean && tsc",
-    "publish": "npm run prepublish && npm publish"
+    "build": "tsc",
+    "prepublish": "npm run clean && npm run build"
   },
   "author": "wishcresp",
   "repository": {
