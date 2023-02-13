@@ -1,6 +1,6 @@
 {
   "name": "extent-canvas",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A React HTML canvas with pan, zoom and touch support",
   "type": "module",
   "files": [
@@ -9,14 +9,14 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
-    ".": "./dist/index.js",
-    "./*": "./dist/*"
+    "./*": "./dist/*",
+    ".": "./dist/index.js"
   },
   "typesVersions": {
     "*": {
       "*": [
-        "./dist/index.d.ts",
-        "./dist/*"
+        "./dist/*",
+        "./dist/index.d.ts"
       ]
     }
   },
