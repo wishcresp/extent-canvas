@@ -1,5 +1,15 @@
 # React Extent Canvas
 
-A [HTMLCanvasElement](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) for React which can be panned and zoomed. Also supports touch and Pinch-to-Zoom.
+[![npm](https://badgen.net/npm/v/extent-canvas)](https://www.npmjs.com/package/extent-canvas)
 
-See it in action: https://berrycamp.github.io/map/celeste/city/a
+A [HTML Canvas](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) for React which supports touch, panning and zooming. Written in Typescript.
+
+## Installation
+
+```sh
+npm install extent-canvas
+```
+
+## Demo
+
+https://berrycamp.github.io/map/celeste/city/a
