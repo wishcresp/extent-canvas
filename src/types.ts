@@ -1,4 +1,4 @@
-import {CanvasHTMLAttributes, DetailedHTMLProps, RefObject} from "react";
+import type {CanvasHTMLAttributes, DetailedHTMLProps, RefObject} from "react";
 
 /**
  * Extent canvas component props.
