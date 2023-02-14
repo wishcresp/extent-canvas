@@ -1,6 +1,6 @@
 {
   "name": "extent-canvas",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A React HTML canvas with pan, zoom and touch support",
   "type": "module",
   "files": [
