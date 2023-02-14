@@ -26,6 +26,9 @@ export type {
   ExtentCanvasViewChangeReason
 };
 
+/**
+ * Make a canvas an extent-canvas allowing it to be panned and zoomed.
+ */
 export const useExtentCanvas: UseExtentCanvas = ({
   ref,
   options,
@@ -241,6 +244,12 @@ export const useExtentCanvas: UseExtentCanvas = ({
   return {setView, setViewBox, draw};
 }
 
+/**
+ * A simple extent-canvas component.
+ * 
+ * Either {@link view} or {@link viewBox} can be used for controlled view state and should
+ * be used with the appropriate {@link onViewChange} or {@link onViewBoxChange} callback.
+ */
 export const ExtentCanvas: FC<ExtentCanvasProps> = ({
   view,
   viewBox,
