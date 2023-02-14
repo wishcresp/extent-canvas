@@ -171,8 +171,8 @@ export const useExtentCanvas: UseExtentCanvas = ({
     const handleTouchMove = ({touches}: TouchEvent) => {
       const {x, y, t1, t2} = getTouchCoordinates(touches);
 
-      posRef.current = getCursorOffset(x, y, context);
       prevPosRef.current = posRef.current;
+      posRef.current = getCursorOffset(x, y, context);
 
       const newDiff: ExtentCanvasPoint = scale(diff(posRef.current, prevPosRef.current), viewRef.current.scale);
       viewRef.current.offset = add(viewRef.current.offset, newDiff);
@@ -222,7 +222,7 @@ export const useExtentCanvas: UseExtentCanvas = ({
       context.canvas.removeEventListener("touchmove", handleTouchMove);
       context.canvas.removeEventListener("touchend", handleTouchStart);
     }
-  }, [context, onViewChange, onViewBoxChange, draw]);
+  }, [context, onViewChange, onViewBoxChange, draw, zoomSensitivity, maxScale, minScale]);
 
   useEffect(() => {
     if (ref.current === null) {
