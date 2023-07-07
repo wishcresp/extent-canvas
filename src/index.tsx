@@ -74,7 +74,7 @@ export const useExtentCanvas: UseExtentCanvas = ({
       height + (height / viewRef.current.scale),
     );
 
-    onDraw?.(context);
+    onDraw?.(context, viewRef.current);
   }, [context, onBeforeDraw, onDraw]);
 
   const setView: ExtentCanvasFunctions["setView"] = useCallback((view) => {
