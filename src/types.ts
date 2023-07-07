@@ -87,8 +87,9 @@ export interface ExtentCanvasArgs {
    * Callback to draw to the canvas.
    * 
    * @param context The canvas 2D context.
+   * @param context The current canvas view.
    */
-  onDraw?: (context: CanvasRenderingContext2D) => void;
+  onDraw?: (context: CanvasRenderingContext2D, view: ExtentCanvasView) => void;
 
   /**
    * Callback when the canvas' view changes.
